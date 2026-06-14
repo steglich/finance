@@ -1,3 +1,51 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Cores Primárias */
+  --color-primary: #FF5A00;
+  --color-primary-hover: #FF7E40;
+  --color-primary-active: #D94D00;
+
+  /* Cores Neutras (Modo Claro) */
+  --color-neutral-light-bg: #F5F5F5;
+  --color-neutral-light-surface: #FFFFFF;
+  --color-neutral-light-border: #E0E0E0;
+  --color-neutral-light-text: #2A2A2A;
+  --color-neutral-light-muted: #777777;
+
+  /* Cores Neutras (Modo Escuro) */
+  --color-neutral-dark-bg: #1E1E1E;
+  --color-neutral-dark-surface: #2A2A2A;
+  --color-neutral-dark-border: #3A3A3A;
+  --color-neutral-dark-text: #FFFFFF;
+  --color-neutral-dark-muted: #A0A0A0;
+
+  /* Cores de Status */
+  --color-success: #8FC866;
+  --color-error: #E06B53;
+  --color-info: #2196F3;
+
+  /* Tipografia */
+  --font-sans: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  body {
+    background-color: var(--color-neutral-light-bg);
+    color: var(--color-neutral-light-text);
+  }
+
+  body.dark {
+    background-color: var(--color-neutral-dark-bg);
+    color: var(--color-neutral-dark-text);
+  }
+}
