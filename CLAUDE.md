@@ -28,7 +28,7 @@ npm run db:studio      # Open Prisma Studio GUI (port 5555)
 
 ### Frontend (`finance-front/`)
 ```bash
-npm run start          # Angular dev server (port 4200, binds to 0.0.0.0 — accessible via LAN)
+npm run start          # Angular dev server (port 4200, browser only)
 npm run build          # Production build
 npm test               # Run unit tests (Vitest)
 ```
