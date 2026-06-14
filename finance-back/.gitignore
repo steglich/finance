@@ -1,0 +1,48 @@
+# ==============================================================================
+# GITIGNORE BACKEND (NODE.JS / TYPESCRIPT)
+# ==============================================================================
+
+# Dependências
+# ------------------------------------------------------------------------------
+node_modules/
+jspm_packages/
+web_modules/
+
+# Saída de Build e Compilação
+# ------------------------------------------------------------------------------
+dist/
+build/
+out/
+x64/
+x88/
+*.tsbuildinfo
+
+# Variáveis de Ambiente e Segredos (NUNCA enviar para o repositório)
+# ------------------------------------------------------------------------------
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Logs e Diagnósticos
+# ------------------------------------------------------------------------------
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Testes e Cobertura
+# ------------------------------------------------------------------------------
+coverage/
+.nyc_output/
+
+# Caches de Ferramentas
+# ------------------------------------------------------------------------------
+.eslintcache
+.parcel-cache
+.node_repl_history
+.node-gyp
