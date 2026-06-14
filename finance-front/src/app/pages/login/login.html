@@ -39,24 +39,27 @@
     </div>
     }
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
+    <form [formRoot]="loginForm" (submit)="onSubmit($event)" class="space-y-5">
+
+      @let emailField = loginForm.email();
+      @let passwordField = loginForm.password();
 
       <div>
         <label for="email" class="block text-sm font-semibold mb-2">E-mail</label>
         <div class="relative">
-          <input id="email" type="email" formControlName="email" placeholder="exemplo@finance.com" class="w-full px-5 py-3 rounded-full border outline-none transition-all duration-200
+          <input id="email" type="email" [formField]="loginForm.email" placeholder="exemplo@finance.com" class="w-full px-5 py-3 rounded-full border outline-none transition-all duration-200
                         bg-transparent text-sm
                         border-neutral-light-border focus:border-info focus:ring-1 focus:ring-info
-                        dark:border-neutral-dark-border dark:focus:border-info dark:focus:ring-info" [ngClass]="{
-                   'border-error focus:border-error focus:ring-error dark:border-error': email?.touched && email?.invalid,
-                   'border-success focus:border-success focus:ring-success dark:border-success': email?.touched && email?.valid
-                 }">
+                        dark:border-neutral-dark-border dark:focus:border-info dark:focus:ring-info" [class]="emailField.touched() && emailField.invalid()
+                          ? 'border-error focus:border-error focus:ring-error dark:border-error'
+                          : emailField.touched()
+                          ? 'border-success focus:border-success focus:ring-success dark:border-success'
+                          : ''">
         </div>
 
-        @if (email?.touched && email?.errors) {
+        @if (emailField.touched() && emailField.invalid()) {
         <span class="text-xs text-error mt-1 block px-2">
-          @if (email?.errors?.['required']) { O e-mail é obrigatório. }
-          @if (email?.errors?.['email']) { Digite um endereço de e-mail válido. }
+          {{ emailField.errors()[0].message }}
         </span>
         }
       </div>
@@ -64,33 +67,33 @@
       <div>
         <label for="password" class="block text-sm font-semibold mb-2">Senha</label>
         <div class="relative">
-          <input id="password" type="password" formControlName="password" placeholder="Sua senha secreta" class="w-full px-5 py-3 rounded-full border outline-none transition-all duration-200
+          <input id="password" type="password" [formField]="loginForm.password" placeholder="Sua senha secreta" class="w-full px-5 py-3 rounded-full border outline-none transition-all duration-200
                         bg-transparent text-sm
                         border-neutral-light-border focus:border-info focus:ring-1 focus:ring-info
-                        dark:border-neutral-dark-border dark:focus:border-info dark:focus:ring-info" [ngClass]="{
-                   'border-error focus:border-error focus:ring-error dark:border-error': password?.touched && password?.invalid,
-                   'border-success focus:border-success focus:ring-success dark:border-success': password?.touched && password?.valid
-                 }">
+                        dark:border-neutral-dark-border dark:focus:border-info dark:focus:ring-info" [class]="passwordField.touched() && passwordField.invalid()
+                          ? 'border-error focus:border-error focus:ring-error dark:border-error'
+                          : passwordField.touched()
+                          ? 'border-success focus:border-success focus:ring-success dark:border-success'
+                          : ''">
         </div>
 
-        @if (password?.touched && password?.errors) {
+        @if (passwordField.touched() && passwordField.invalid()) {
         <span class="text-xs text-error mt-1 block px-2">
-          @if (password?.errors?.['required']) { A senha é obrigatória. }
-          @if (password?.errors?.['minlength']) { A senha deve ter no mínimo 6 caracteres. }
+          {{ passwordField.errors()[0].message }}
         </span>
         }
       </div>
 
       <div class="flex items-center justify-between text-xs px-2">
         <label class="flex items-center space-x-2 cursor-pointer">
-          <input type="checkbox" formControlName="rememberMe"
+          <input type="checkbox" [formField]="loginForm.rememberMe"
             class="rounded border-neutral-light-border dark:border-neutral-dark-border text-primary focus:ring-primary h-4 w-4">
           <span>Lembrar-me</span>
         </label>
         <a href="#" class="text-primary hover:text-primary-hover font-semibold transition-colors">Esqueceu a senha?</a>
       </div>
 
-      <button type="submit" [disabled]="loginForm.invalid || isLoading()" class="w-full py-3 rounded-full bg-primary hover:bg-primary-hover active:bg-primary-active
+      <button type="submit" [disabled]="loginForm().invalid() || isLoading()" class="w-full py-3 rounded-full bg-primary hover:bg-primary-hover active:bg-primary-active
                      text-white font-bold tracking-wide uppercase transition-colors duration-200
                      disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex justify-center items-center">
         @if (isLoading()) {
@@ -106,6 +109,50 @@
         ENTRAR
         }
       </button>
+
+      <div class="flex items-center gap-4 py-2">
+        <div class="flex-1 h-px bg-neutral-light-border dark:bg-neutral-dark-border"></div>
+        <span class="text-xs text-neutral-light-muted dark:text-neutral-dark-muted">ou continue com</span>
+        <div class="flex-1 h-px bg-neutral-light-border dark:bg-neutral-dark-border"></div>
+      </div>
+
+      <div class="flex justify-center gap-3">
+        <button type="button" class="social-btn p-3 rounded-full border border-neutral-light-border dark:border-neutral-dark-border
+                       hover:bg-neutral-light-bg dark:hover:bg-neutral-dark-bg transition-colors cursor-pointer"
+          aria-label="Entrar com Facebook">
+          <svg class="h-5 w-5 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+          </svg>
+        </button>
+        <button type="button" class="social-btn p-3 rounded-full border border-neutral-light-border dark:border-neutral-dark-border
+                       hover:bg-neutral-light-bg dark:hover:bg-neutral-dark-bg transition-colors cursor-pointer"
+          aria-label="Entrar com Google">
+          <svg class="h-5 w-5" viewBox="0 0 24 24">
+            <path
+              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+              fill="#4285F4" />
+            <path
+              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              fill="#34A853" />
+            <path
+              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+              fill="#FBBC05" />
+            <path
+              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+              fill="#EA4335" />
+          </svg>
+        </button>
+        <button type="button" class="social-btn p-3 rounded-full border border-neutral-light-border dark:border-neutral-dark-border
+                       hover:bg-neutral-light-bg dark:hover:bg-neutral-dark-bg transition-colors cursor-pointer"
+          aria-label="Entrar com Twitter/X">
+          <svg class="h-5 w-5 text-neutral-light-text dark:text-neutral-dark-text" fill="currentColor"
+            viewBox="0 0 24 24">
+            <path
+              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+          </svg>
+        </button>
+      </div>
     </form>
 
   </div>

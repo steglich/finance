@@ -1,1 +1,9 @@
-/* Estilos locais adicionais para a tela de login (se necessário) */
+/* Divisor "ou continue com" */
+/* Botões de login social */
+.social-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+}
