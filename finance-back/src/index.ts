@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { env } from './core/config/env';
 import { errorHandler } from './core/middlewares/error.middleware';
 import { transactionRoutes } from './modules/transactions';
+import { authRoutes } from './modules/auth';
 
 const app = express();
 const PORT = env.PORT;
@@ -11,6 +12,7 @@ app.use(express.json());
 
 // Registro Modular de Rotas
 app.use('/api/v1/transactions', transactionRoutes);
+app.use('/api/v1/auth', authRoutes);
 
 // Rota de Healthcheck
 app.get('/check', (req: Request, res: Response) => {

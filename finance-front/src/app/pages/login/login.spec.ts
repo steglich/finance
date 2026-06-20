@@ -1,10 +1,14 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { LoginComponent } from './login';
 import { provideSignalFormsConfig } from '@angular/forms/signals';
+import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  let httpMock: HttpTestingController;
 
   beforeAll(() => {
     Object.defineProperty(window, 'matchMedia', {
@@ -25,11 +29,17 @@ describe('LoginComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
-      providers: [provideSignalFormsConfig({})]
+      providers: [
+        provideSignalFormsConfig({}),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideRouter([]),
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
+    httpMock = TestBed.inject(HttpTestingController);
     fixture.detectChanges();
   });
 
@@ -96,5 +106,8 @@ describe('LoginComponent', () => {
     component.onSubmit(event);
 
     expect(component.isLoading()).toBe(true);
+
+    const req = httpMock.expectOne('/api/v1/auth/login');
+    req.flush({ success: true, data: { token: 't', user: { id: 1, email: 'test@test.com' } } });
   });
 });

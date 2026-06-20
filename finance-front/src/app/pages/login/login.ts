@@ -1,6 +1,8 @@
 import { Component, OnInit, signal, inject, ChangeDetectionStrategy, PLATFORM_ID } from '@angular/core';
 import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormRoot, FormField, form, required, email, minLength } from '@angular/forms/signals';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +15,8 @@ import { FormRoot, FormField, form, required, email, minLength } from '@angular/
 export class LoginComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   private document = inject(DOCUMENT);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   loginModel = signal({
     email: '',
@@ -64,12 +68,17 @@ export class LoginComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    const { email, password, rememberMe } = this.loginModel();
-    console.log('Dados de Login enviados:', { email, password, rememberMe });
+    const { email, password } = this.loginModel();
 
-    setTimeout(() => {
-      this.isLoading.set(false);
-      alert('Login simulado com sucesso!');
-    }, 1500);
+    this.authService.login(email, password).subscribe({
+      next: () => {
+        this.isLoading.set(false);
+        this.router.navigate(['/home']);
+      },
+      error: (err: Error) => {
+        this.isLoading.set(false);
+        this.errorMessage.set(err.message);
+      },
+    });
   }
 }
