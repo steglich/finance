@@ -4,18 +4,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Monorepo for a personal finance application. Development is **spec-driven**: the `specs/` directory contains markdown specification files that define exact implementation details for all features.
+Monorepo contendo dois projetos distintos e independentes:
+
+- **`finance-front/`** — Aplicação Angular 22 responsável por toda a camada visual: interface do usuário, componentes standalone, rotas lazy-loaded, temas (light/dark mode) com Tailwind CSS. Não possui acesso direto ao banco de dados — toda comunicação com dados é feita via chamadas HTTP à API do `finance-back`.
+- **`finance-back/`** — API REST em Node.js com TypeScript, responsável por toda a infraestrutura de backend: endpoints HTTP, regras de negócio, autenticação, validação com Zod, e comunicação com o banco de dados PostgreSQL via Prisma ORM. É o único projeto que interage diretamente com o banco de dados.
+
+Desenvolvimento é **spec-driven**: o diretório `specs/` contém arquivos markdown de especificação que definem detalhes exatos de implementação para todas as funcionalidades.
 
 **Memory system:** This project uses persistent memory files at `/home/marlon/.openclaude/projects/-home-marlon-projetos-finance/memory/` (private) and `.../memory/team/` (team-shared). Load `MEMORY.md` from both directories at session start to pick up ongoing project context, version pinning, and user preferences.
 
 ## Subprojects
 
-| Directory | Stack | Description |
-|-----------|-------|-------------|
-| `finance-back/` | Express 5, TypeScript 6, Prisma 5, Zod 3 | Modular monolith REST API |
-| `finance-front/` | Angular 22, Tailwind CSS v4, Vitest | SPA frontend |
+| Diretório | Stack | Responsabilidade |
+|-----------|-------|------------------|
+| `finance-front/` | Angular 22, Tailwind CSS v4, Vitest | Toda a camada visual da aplicação (SPA) |
+| `finance-back/` | Express 5, TypeScript 6, Prisma 5, Zod 3 | Toda a infraestrutura de API e comunicação com banco de dados |
 
 ## Common Commands
+
+Todos os comandos devem ser executados a partir do diretório do projeto correspondente.
 
 ### Backend (`finance-back/`)
 ```bash
@@ -31,6 +38,8 @@ npm run db:studio      # Open Prisma Studio GUI (port 5555)
 **Prisma migration workflow:** The first migration hasn't been created yet. Run `npx prisma migrate dev --name init` to create the initial migration. Subsequent migrations use `npm run db:migrate --name <name>`. Migrations must be run before `npm run dev` — the server won't start without a valid database.
 
 ### Frontend (`finance-front/`)
+
+Execute sempre a partir de `finance-front/`:
 ```bash
 npm run start          # Angular dev server (port 4200, browser only)
 npm run build          # Production build
